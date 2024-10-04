@@ -179,7 +179,7 @@ async def _(Mbot,message):
             thumnail = await thumb_down(id[0])
           #  await message.reply(fileLink)
         #    await message.reply_audio(fileLink)
-            AForCopy = await message.reply_audio(fileLink,caption=f"[{id[3]}](https://youtu.be/{id[0]}) - {id[2]} Thank you for using - @InstaReelsdownbot",title=id[3].replace("_"," "),performer=id[2],thumb=thumnail,duration=id[4])
+            AForCopy = await message.reply_audio(fileLink,caption=f"[{id[3]}](https://youtu.be/{id[0]}) - {id[2]} Thank you for using me",title=id[3].replace("_"," "),performer=id[2],thumb=thumnail,duration=id[4])
             if DUMP_GROUP:
                 await PForCopy.copy(DUMP_GROUP)
                 await AForCopy.copy(DUMP_GROUP)

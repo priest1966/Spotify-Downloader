@@ -30,18 +30,14 @@ from os import execvp,sys
 
 @Mbot.on_message(filters.command("start"))
 async def start(client,message):
-    reply_markup = [[
-        InlineKeyboardButton(
-            text="Bot Channel", url="https://t.me/Spotify_downloa"),
-        InlineKeyboardButton(
-            text="Repo",
-            url="https://github.com/Masterolic/Spotify-Downloader/"),
-        InlineKeyboardButton(text="Help",callback_data="helphome")
-        ],
-        [
-            InlineKeyboardButton(text="Donate",
-            url="https://www.buymeacoffee.com/Masterolic"),
-        ]]
+    reply_markup = [
+                    [InlineKeyboardButton(test="• ᴀᴅᴅ ᴍᴇ ᴛᴏ ᴜʀ ᴄʜᴀᴛ •",url='http://t.me/movieverse_2_bot?startgroup=true')]
+                    [InlineKeyboardButton(text="Movie Channel", url="https://t.me/movieverse_2"),
+                     InlineKeyboardButton(text="Movie Group",url="https://t.me/movieverse_discussion_2")]
+                    [InlineKeyboardButton(text="Help",callback_data="helphome"),
+                     InlineKeyboardButton(text="Buy Me a Coffee", url="https://www.buymeacoffee.com/YourUsername")],
+                    [InlineKeyboardButton(test="• ᴊᴏɪɴ ᴜᴘᴅᴀᴛᴇs ᴄʜᴀɴɴᴇʟ •",url="https://t.me/movieversepremium")]
+                ]
     if LOG_GROUP:
 
         invite_link = await client.create_chat_invite_link(chat_id=(int(LOG_GROUP) if str(LOG_GROUP).startswith("-100") else LOG_GROUP))
@@ -51,6 +47,31 @@ async def start(client,message):
                     reply_markup=InlineKeyboardMarkup(reply_markup))
     return await message.reply_text(f"Hello {message.from_user.first_name}, I'm a Simple Music Downloader Bot. I Currently Support Download from Youtube.",
                     reply_markup=InlineKeyboardMarkup(reply_markup))
+
+from pyrogram import filters
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from mbot import Mbot
+
+# Define the /donate command
+@Mbot.on_message(filters.command("donate"))
+async def donate(client, message):
+    # Define the inline keyboard for donation options
+    donate_buttons = [
+        [InlineKeyboardButton("☕ Buy Me a Coffee", url="https://www.buymeacoffee.com/YourUsername")],
+        [InlineKeyboardButton("💵 Donate via PayPal", url="https://www.paypal.me/YourUsername")],
+        [InlineKeyboardButton("💰 Patreon Support", url="https://www.patreon.com/YourUsername")]
+    ]
+    
+    # Send a reply with the donation options
+    await message.reply_text(
+        f"Hello {message.from_user.first_name}!\n\n"
+        "If you'd like to support this project, feel free to make a donation using any of the methods below. "
+        "Your contribution helps keep the bot running and adds more features! 💖",
+        reply_markup=InlineKeyboardMarkup(donate_buttons)
+    )
+
+# Add this handler to your bot's main loop
+
 
 @Mbot.on_message(filters.command("restart") & filters.chat(OWNER_ID) & filters.private)
 async def restart(_,message):
