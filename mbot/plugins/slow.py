@@ -42,20 +42,6 @@ from lyricsgenius import Genius
 
 supported_link = ["www.deezer.com", "open.spotify.com", "deezer.com", "spotify.com"]
 
-NOT_SUPPORT = [
-    -1001698167203,
-    -1001690327681,
-    -1001744816254,
-    -1001342321483,
-    -1001652993285,
-    -1001523223023,
-]
-
-NO_SPAM = [
-    -1001690327681,
-    -1001342321483,
-]
-
 # db = Database()
 genius = Genius("api_key")
 
@@ -71,7 +57,7 @@ async def _(c, m):
     try:
         user_id = message.from_user.id
     except:
-        user_id = 5268375124
+        user_id = 330029937
     if not m.text:
         return
     try:
@@ -108,7 +94,7 @@ async def _(c, m):
         for item in results['tracks']['items']:
             reply_markup.append([InlineKeyboardButton(f"{item['name']} - {item['artists'][0]['name']}", callback_data=f"search_{index}_{results['tracks']['items'][int(index)]['id']}")])
             index += 1
-        reply_markup.append([InlineKeyboardButton("❌", callback_data="cancel")])
+        reply_markup.append([InlineKeyboardButton("Cancel ❌", callback_data="cancel")])
         await K.delete()
         await message.reply(f"🔎I Found 10 Results For {query}",
                             reply_markup=InlineKeyboardMarkup(reply_markup))
@@ -129,8 +115,8 @@ async def search(Mbot: Mbot, query: CallbackQuery):
         song = await fetch_spotify_track(client, track)
         item = sp.track(track_id=track)
         thumbnail = await thumb_down(item['album']['images'][0]['url'], song.get('deezer_id'))
-        PForCopy = await query.message.reply_photo(thumbnail, caption=f"🎧 Title : `{song['name']}­­`\n🎤 Artist : `{song['artist']}`­\n💽 Album : `{song['album']}`\n🗓 Release Year: `{song['year']}`\n❗️Is Local:`{item['is_local']}`\n 🌐ISRC: `{item['external_ids']['isrc']}`\n\n[IMAGE]({item['album']['images'][0]['url']})\nTrack id:`{song['deezer_id']}`",
-                                                  reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="❌", callback_data="cancel")]]))
+        PForCopy = await query.message.reply_photo(thumbnail, caption=f"🎧 Title : `{song['name']}­­`\n🎤 Artist : `{song['artist']}`­\n💽 Album : `{song['album']}`\n🗓 Release Year: `{song['year']}`\n❗️Is Local:`{item['is_local']}`\n 🌐ISRC: `{item['external_ids']['isrc']}`\n\n[IMAGE]({item['album']['images'][0]['url']})\n\n\nRequest By: `{message.chat.username}`",
+                                                  reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="Cancel ❌", callback_data="cancel")]]))
         randomdir = f"/tmp/{str(randint(1, 100000000))}"
         mkdir(randomdir)
         run = True
@@ -138,19 +124,15 @@ async def search(Mbot: Mbot, query: CallbackQuery):
             try:
                 path = await download_songs(item, randomdir)
             except Exception as e:
-                pass
-                # optional you can clear this or add this by using #
                 await message.reply(e)
-                # await Mbot.send_message(BUG,e)
                 await query.message.reply_text(f"[{song.get('name')} - {song.get('artist')}](https://open.spotify.com/track/{song.get('deezer_id')}) Track Not Found ⚠️")
-                # await message.reply_text(f"try `/saavn {song.get('name')} - {song.get('artist')}`")
             try:
                 await sleep(0.6)
                 audio = FLAC(path)
                 audio["TITLE"] = f" {song.get('name')}"
                 audio["ORIGINALYEAR"] = song.get('year')
                 audio["YEAR_OF_RELEASE"] = song.get('year')
-                audio["WEBSITE"] = "https://t.me/spotify_downloa_bot"
+                audio["WEBSITE"] = "https://t.me/movieversepremium"
                 audio["GEEK_SCORE"] = "9"
                 audio["ARTIST"] = song.get('artist')
                 audio["ALBUM"] = song.get('album')
@@ -175,7 +157,7 @@ async def search(Mbot: Mbot, query: CallbackQuery):
                 else:
                     mime = 'image/jpeg'
                 image.desc = 'front cover'
-                with open(thumbnail, 'rb') as f:  # better than open(albumart, 'rb').read() ?
+                with open(thumbnail, 'rb') as f:
                     image.data = f.read()
 
                 audi.add_picture(image)
@@ -184,48 +166,33 @@ async def search(Mbot: Mbot, query: CallbackQuery):
                 pass
             try:
                 dForChat = await message.reply_chat_action(enums.ChatAction.UPLOAD_AUDIO)
-                # sleep(1)
                 AForCopy = await query.message.reply_audio(path, performer=f"{song.get('artist')}­", title=f"{song.get('name')} - {song.get('artist')}", caption=f"[{song.get('name')}](https://open.spotify.com/track/{song.get('deezer_id')}) | {song.get('album')} - {song.get('artist')}", thumb=thumbnail, parse_mode=enums.ParseMode.MARKDOWN, quote=True,
-                                                          reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="❌", callback_data="cancel")]]))
+                                                          reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="Cancel ❌", callback_data="cancel")]]))
                 await forward(PForCopy, AForCopy)
             except Exception as e:
                 pass
-                # await Mbot.send_message(BUG,e)
     except NameError as e:
-        pass
         await Mbot.send_message(BUG, e)
         await query.answer("Your Query Is Too Old ❌")
     except UserIsBlocked:
         pass
     except (FileNotFoundError, OSError):
-        pass
-        await query.answer('Sorry, We Are Unable To Procced It 🤕❣️')
+        await query.answer('Sorry, We Are Unable To Proceed It 🤕❣️')
     except FloodWait as e:
-        pass
         await sleep(e.value)
-        await query.answer(f"Telegram says: [420 FLOOD_WAIT_X] - A wait of {e.value} seconds is required !")
+        await query.answer(f"Telegram says: [420 FLOOD_WAIT_X] - A wait of {e.value} seconds is required!")
     except SlowmodeWait as e:
-        pass
         await sleep(e.value)
     except RPCError:
-        pass
-        await query.answer(f"telegram says 500 error, so please try again later.❣️")
+        await query.answer(f"Telegram says 500 error, so please try again later.❣️")
     except Exception as e:
-        pass
-        await query.answer("Sorry, We Are Unable To Procced It 🤕❣️")
-    #   await Mbot.send_message(BUG,f"Query Raised Erorr {e} On {query.message.chat.id} {query.message.from_user.mention}")
-    finally: 
+        await query.answer("Sorry, We Are Unable To Proceed It 🤕❣️")
+    finally:
         await sleep(2.0)
         try:
             rmtree(randomdir)
         except:
             pass
-        try:
-            await query.message.reply_text(f"Done✅",   
-         reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="Feedback", callback_data="feed")]]))
-            await query.message.reply_text(f"Check out @spotify_downloa_bot(music)  @spotifynewss(News)")
-        except:
-            pass     
 
 @Mbot.on_callback_query(filters.regex(r"refresh"))
 async def refresh(Mbot, query):

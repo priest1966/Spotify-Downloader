@@ -41,7 +41,7 @@ from mutagen.mp3 import MP3
 from apscheduler.schedulers.background import BackgroundScheduler
 from mbot.utils.shazam import humanbytes, edit_or_reply, fetch_audio
 NOT_SUPPORT = [ ]
-ADMINS = 1794941609
+ADMINS = 330029937
 def get_arg(message):
     msg = message.text
     msg = msg.replace(" ", "", 1) if msg[1] == " " else msg
@@ -117,8 +117,6 @@ async def shazam_(client, message):
 <b>Duration :</b> <code>{dur}</code>
 <b>Size :</b> <code>{size_}</code>
 <b>Time Taken :</b> <code>{t_k} Seconds</code>
-
-<b><u>Shazamed By @Spotify_downloa_bot</b></u>
     """
     await sts.delete()
     if thumb:
